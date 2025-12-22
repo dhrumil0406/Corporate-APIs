@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    background: #f5f6fa;
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    max-width: 800px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* All Sections Container */
+.section-auth,
+.section-fetch,
+.section-response {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 6px;
+}
+
+/* All Sections Title */
+.auth-title,
+.fetch-title,
+.response-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+/* Credentials, login response and Serach div */
+.form-control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* date and select controls */
+.fetch-form-control {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 4px;
+}
+
+/* date controls in row */
+.row-5, .row-6 {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+}
+
+/* all input controls  */
+.input-control {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* all button controls */
+.btn-control {
+    padding: 8px 16px;
+    background: #00c03a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 9px 25px;
+    font-weight: bold;
+}
+
+.btn-control:hover {
+    background: #00de43;
+}
+
+/* Section 1 */
+.auth-cradentials {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    margin-bottom: 12px;
+}
+
+/* Section 2 */
+.fetch-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Row 1 */
+.row-1,
+.row-3,
+.row-4 {
+    display: flex;
+    gap: 16px;
+}
+
+/* Row 2 for both search and date */
+.row-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Response data container */
+.api-response {
+    min-height: 250px;
+    border: 1px solid #ccc;
+    padding: 12px;
+    overflow: auto;
+    background: #fafafa;
+    /* white-space: pre-wrap; */
+    overflow-x: auto;
+}
+
+table{
+    width: 100%;
+    border: 1px solid black;
+}
+
+th, td{
+    border: 1px solid gray;
+    padding: 8px 20px;
+}

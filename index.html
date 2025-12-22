@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate APIs</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script src="script.js"></script> -->
+</head>
+<!-- WS Test Corporate -->
+
+<body>
+    <div class="container">
+        <div class="section-auth">
+            <div class="auth-title">
+                Generate Token
+            </div>
+            <div class="auth-cradentials">
+                <div class="form-control">
+                    <label for="username">User Id:</label>
+                    <input type="text" value="td134" name="username" id="username" class="input-control">
+                </div>
+                <div class="form-control">
+                    <label for="password">Password:</label>
+                    <input type="password" value="dhrumil@134" name="password" id="password" class="input-control">
+                </div>
+                <div class="form-control">
+                    <label for="grantType">Grant Type:</label>
+                    <input type="text" value="password" name="grantType" id="grantType" class="input-control" disabled>
+                </div>
+                <div class="form-btn-control">
+                    <button type="button" name="btn-login" id="btn-login" class="btn-control">Login</button>
+                    <button type="button" name="btn-logout" id="btn-logout" class="btn-control">Logout</button>
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="login-response">Login Response:</label>
+                <input type="text" name="login-response" id="login-response" class="input-control">
+            </div>
+        </div>
+        <div class="section-fetch">
+            <div class="fetch-title">
+                Fetch Mutual Fund Data
+            </div>
+            <div class="fetch-controls">
+                <div class="row-1">
+                    <div class="fetch-form-control">
+                        <label for="apiType">Select API Type:</label>
+                        <select name="apiType" id="apiType" class="input-control">
+                            <option value="getdescriptors">Descriptors</option>
+                            <option value="announcement-list">Announcement List</option>
+                            <option value="rslt-list-date">Result List ByDate</option>
+                            <option value="announcement-for-companies">Announcements For Companies</option>
+                            <option value="nav-history">NAV History</option>
+                            <option value="yearly-return">Yearly Return By Scheme</option>
+                            <option value="nav-behavcopy">Daily NAV Bhavcopy</option>
+                        </select>
+                    </div>
+                    <div class="fetch-form-control">
+                        <label for="resType">Select Response Type:</label>
+                        <select name="resType" id="resType" class="input-control">
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row-2">
+                    <div class="form-control">
+                        <label for="search">Search Symbol:</label>
+                        <input type="text" name="search" id="search" class="input-control">
+                    </div>
+                </div>
+                <div class="row-3">
+                    <div class="fetch-form-control">
+                        <label for="date">Date:</label>
+                        <input type="date" name="date" id="date" class="input-control">
+                    </div>
+                </div>
+                <div class="row-5">
+                    <div class="fetch-form-control">
+                        <label for="fromDate">From Date:</label>
+                        <input type="date" name="fromDate" id="fromDate" class="input-control">
+                    </div>
+                    <div class="fetch-form-control">
+                        <label for="toDate">To Date:</label>
+                        <input type="date" name="toDate" id="toDate" class="input-control">
+                    </div>
+                </div>
+                <div class="row-6">
+                    <div class="fetch-form-control">
+                        <label for="top">Top:</label>
+                        <input type="number" name="top" id="top" class="input-control" min="1">
+                    </div>
+                </div>
+                <div class="row-4">
+                    <button type="button" name="btn-fetch" id="btn-fetch" class="btn-control">Fetch Data</button>
+                </div>
+            </div>
+        </div>
+        <div class="section-response">
+            <div class="response-title">
+                Response
+            </div>
+            <div class="api-response">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>No Data Found</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <!-- <tr>
+                        <th>Id</th>
+                        <th>Descriptors</th>
+                        <th>Categories</th>
+                    </tr>
+                    <tr>
+                        <td>Id</td>
+                        <td>Descriptors</td>
+                        <td>Categories</td>
+                    </tr> -->
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // fetch all divs
+        const row2 = document.querySelector(".row-2");
+        const row3 = document.querySelector(".row-3");
+        const row5 = document.querySelector(".row-5");
+        const row6 = document.querySelector(".row-6");
+
+        // fetch all controls
+        const username = document.getElementById("username");
+        const password = document.getElementById("password");
+        const grantType = document.getElementById("grantType");
+        const apiType = document.getElementById("apiType");
+        const resType = document.getElementById("resType");
+        const search = document.getElementById("search");
+        const fromDate = document.getElementById("fromDate");
+        const toDate = document.getElementById("toDate");
+        const singleDate = document.getElementById("date");
+        const loginResponse = document.getElementById("login-response");
+        const apiResponseBox = document.querySelector(".api-response");
+        const dataTable = document.querySelector(".data-table");
+        const thead = dataTable.querySelector("thead");
+        const tbody = dataTable.querySelector("tbody");
+
+        // all buttons
+        const btnLogin = document.getElementById("btn-login");
+        const btnLogout = document.getElementById("btn-logout");
+        const btnFetch = document.getElementById("btn-fetch");
+
+        var authInputs;
+        var apiInputs;
+        var access_token;
+
+        row2.style.display = "none";
+        row3.style.display = "none";
+        row5.style.display = "none";
+        row6.style.display = "none";
+
+        const clearAll = () => {
+            loginResponse.value = "";
+            btnLogin.style.cursor = "pointer";
+            btnLogout.style.cursor = "not-allowed";
+            btnFetch.style.cursor = "not-allowed";
+            btnLogin.style.opacity = 1;
+            btnLogout.style.opacity = 0.5;
+            btnFetch.style.opacity = 0.5;
+        }
+        clearAll();
+
+        // apiType change then hide/show of divs
+        apiType.addEventListener("change", function () {
+            // Hide everything first and if needed disply flex
+            row2.style.display = "none";
+            row3.style.display = "none";
+            row5.style.display = "none";
+            row6.style.display = "none";
+
+            const selectedValue = apiType.value;
+
+            // 4th opt NAV History
+            if (selectedValue === "announcement-list") {
+                row2.style.display = "flex";
+                row5.style.display = "flex";
+            }
+
+            else if (selectedValue === "rslt-list-date") {
+                row3.style.display = "flex";
+            }
+
+            else if (selectedValue === "announcement-for-companies") {
+                row2.style.display = "flex";
+                row5.style.display = "flex";
+                row6.style.display = "flex";
+            }
+
+            // 5th opt Yearly Return By Scheme
+            else if (selectedValue === "yearly-return") {
+                row2.style.display = "flex";
+                row5.style.display = "none";
+            }
+
+            // 6th opt Daily NAV Bhavcopy
+            else if (selectedValue === "nav-behavcopy") {
+                row3.style.display = "flex";
+            }
+        });
+
+        // store auth inputs data in object
+        const fetchAuthInputs = () => {
+            authInputs = {
+                username: username.value,
+                password: password.value,
+                grantType: grantType.value
+            }
+        }
+
+        // store all api inputs data in object
+        const fetchApiInputs = () => {
+            apiInputs = {
+                apiType: apiType.value,
+                resType: resType.value,
+                search: search.value,
+                fromDate: fromDate.value,
+                toDate: toDate.value,
+                singleDate: singleDate.value
+            };
+        };
+
+        const makeConnection = () => {
+            const authdata = new URLSearchParams();
+            authdata.append("username", authInputs.username);
+            authdata.append("password", authInputs.password);
+            authdata.append("grant_type", authInputs.grantType);
+
+            fetch("https://auth.truedata.in/token", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: authdata.toString()
+            })
+                .then(res => res.json())
+                .then((res) => {
+                    if (res.access_token) {
+                        token = res.access_token;
+                        loginResponse.value = "Token Granted!"
+                        btnLogin.style.cursor = "not-allowed";
+                        btnLogin.style.opacity = 0.5;
+                        btnLogout.style.cursor = "pointer";
+                        btnLogout.style.opacity = 1;
+                        btnFetch.style.cursor = "pointer";
+                        btnFetch.style.opacity = 1;
+                    }
+                    if (res.error) {
+                        loginResponse.value = "Error: " + JSON.stringify(res)
+                    }
+                })
+                .catch(error => console.log(error))
+        }
+
+        const fetchApiData = async () => {
+            try {
+                const res = await fetch(
+                    `https://corporate.truedata.in/${apiInputs.apiType}?response=${apiInputs.resType}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Accept": apiInputs.resType === "csv"
+                                ? "text/csv"
+                                : "application/json"
+                        }
+                    }
+                );
+
+                if (!res.ok) {
+                    throw new Error(`HTTP Error: ${res.status}`);
+                }
+
+                if (apiInputs.resType === "csv") {
+                    const csvText = await res.text();
+                    const lines = csvText.split('\n');
+                    if (lines.length === 0) return;
+
+                    thead.innerHTML = "";
+                    // Header Setup
+                    const headers = lines[0].split(',');
+                    const tr = document.createElement("tr");
+                    headers.map(key => {
+                        const th = document.createElement("th");
+                        th.textContent = key;
+                        tr.appendChild(th);
+                    });
+                    thead.appendChild(tr);
+
+                    // Data Setup
+                    lines.slice(1).forEach(line => {
+                        const values = line.split(",");
+                        const tr = document.createElement("tr");
+                        headers.forEach((_, idx) => {
+                            const td = document.createElement("td");
+                            td.textContent = values[idx]?.trim() || "-";
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    const jsonData = await res.json();
+                    thead.innerHTML = `<tr>
+                            <th>Id</th>
+                            <th>Descriptors</th>
+                            <th>Categories</th>
+                        <tr>`;
+                    jsonData.Records.map(row => {
+                        const tr = document.createElement("tr");
+                        row.map(data => {
+                            const td = document.createElement("td");
+                            td.textContent = data ?? "-";
+                            tr.appendChild(td);
+                        })
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (error) {
+                console.error("API Error:", error.message);
+            }
+        };
+
+
+
+        btnLogin.addEventListener('click', () => {
+            fetchAuthInputs();
+            makeConnection();
+        });
+
+        btnLogout.addEventListener('click', () => {
+            clearAll();
+        });
+
+        btnFetch.addEventListener('click', () => {
+            fetchApiInputs();
+            fetchApiData();
+        });
+
+    </script>
+</body>
+
+</html>
