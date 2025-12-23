@@ -1,19 +1,23 @@
 // fetch all divs
 const row2 = document.querySelector(".row-2");
-const row3 = document.querySelector(".row-3");
 const divtoprec = document.querySelector(".div-top-rec");
+const divfromdate = document.querySelector(".div-from-date");
+const divtodate = document.querySelector(".div-to-date");
 
 // fetch all controls
 const username = document.getElementById("username");
 const password = document.getElementById("password");
 const grantType = document.getElementById("grantType");
 const apiType = document.getElementById("apiType");
-const resType = document.getElementById("resType");
 const search = document.getElementById("search");
 const fromDate = document.getElementById("fromDate");
 const toDate = document.getElementById("toDate");
 const singleDate = document.getElementById("date");
 const topRec = document.getElementById("top");
+
+const nature = document.getElementById("nature");
+const period = document.getElementById("period");
+const type = document.getElementById("type");
 
 const loginResponse = document.getElementById("login-response");
 const apiResponseBox = document.querySelector(".api-response");
@@ -32,11 +36,11 @@ var apiInputs = {};
 
 const BASE_URL = "https://corporate.truedata.in";
 
-[row2, row3, divtoprec].forEach(r => r.style.display = "none");
+[row2].forEach(r => r.style.display = "none");
 
 const clearAll = () => {
     access_token = "";
-    loginResponse.value = "";
+    loginResponse.innerText = "";
     btnLogin.style.cursor = "pointer";
     btnLogout.style.cursor = "not-allowed";
     btnFetch.style.cursor = "not-allowed";
@@ -50,26 +54,28 @@ const clearFiledsValue = () => {
     search.value = "";
     fromDate.value = toDate.value = "";
     singleDate.value = topRec.value = "";
+    nature.value = period.value = type.value = "";
 }
 
 // apiType change then hide/show of divs
 apiType.addEventListener("change", function () {
     // Hide everything first and if needed disply flex
-    [row2, row3, divtoprec].forEach(r => r.style.display = "none");
+    [row2, row2.children[0], row2.children[1], row2.children[2], row2.children[3], row2.children[4], row2.children[5], row2.children[6], row2.children[7]].forEach(r => r.style.display = "none");
     clearFiledsValue();
 
     switch (apiType.value) {
         case "announcements":
-            row2.style.display = "flex";
+            row2.style.display = row2.children[0].style.display = row2.children[1].style.display = row2.children[2].style.display = "flex";
             break;
         case "getResultList":
-            row3.style.display = "flex";
+            row2.style.display = row2.children[7].style.display = "flex";
             break;
         case "getannouncementsforcompanies":
-            row2.style.display = divtoprec.style.display = "flex";
+            row2.style.display = row2.children[0].style.display = row2.children[1].style.display = row2.children[2].style.display = row2.children[3].style.display = "flex";
             break;
-        case "yearly-return":
-            row2.style.display = "flex";
+        case "getAllResultsByCompany":
+            row2.style.display = row2.children[0].style.display = row2.children[4].style.display = row2.children[5].style.display = row2.children[6].style.display = "flex";
+            // row2.children[1].style.display = row2.children[2].style.display = row2.children[3].style.display = "none";
             break;
         default:
             break;
@@ -89,12 +95,15 @@ const fetchAuthInputs = () => {
 const fetchApiInputs = () => {
     apiInputs = {
         apiType: apiType.value,
-        resType: resType.value,
+        resType: 'csv',
         search: search.value,
         fromDate: fromDate.value,
         toDate: toDate.value,
         date: singleDate.value,
         top: topRec.value,
+        nature: nature.value,
+        period: period.value,
+        type: type.value
     };
 };
 
@@ -107,6 +116,16 @@ const formateDateTime = (date) => {
     const dd = String(d.getDate()).padStart(2, "0");
 
     return `${yy}${MM}${dd} 00:00:00`;
+}
+
+const formatDate = (date) => {
+    const d = new Date(date);
+
+    const yy = String(d.getFullYear()).slice(2);
+    const MM = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+
+    return `${yy}${MM}${dd}`;
 }
 
 const login = async () => {
@@ -122,13 +141,16 @@ const login = async () => {
 
     const data = await res.json();
     access_token = data.access_token || "";
-    loginResponse.value = access_token ? "Token Granted" : `Error: ${JSON.stringify(data)}`;
-    btnLogin.style.cursor = "not-allowed";
-    btnLogin.style.opacity = 0.5;
-    btnLogout.style.cursor = "pointer";
-    btnLogout.style.opacity = 1;
-    btnFetch.style.cursor = "pointer";
-    btnFetch.style.opacity = 1;
+    loginResponse.innerText = access_token ? "Token Granted!" : `Invalid Cradentials!`;
+    if (access_token) {
+        btnLogin.style.cursor = "not-allowed";
+        btnLogin.style.opacity = 0.5;
+        btnLogout.style.cursor = "pointer";
+        btnLogout.style.opacity = 1;
+        btnFetch.style.cursor = "pointer";
+        btnFetch.style.opacity = 1;
+    }
+
 }
 
 const callApi = async ({ apiInputs, query = {} }) => {
@@ -139,9 +161,7 @@ const callApi = async ({ apiInputs, query = {} }) => {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${access_token}`,
-                "Accept": apiInputs.resType === "csv"
-                    ? "text/csv"
-                    : "application/json"
+                "Accept": "text/csv"
             }
         }
     );
@@ -150,9 +170,7 @@ const callApi = async ({ apiInputs, query = {} }) => {
         throw new Error(`HTTP Error: ${res.status}`);
     }
 
-    return apiInputs.resType === "csv"
-        ? await res.text()
-        : await res.json();
+    return await res.text()
 }
 
 const csvToTable = (data) => {
@@ -185,53 +203,6 @@ const csvToTable = (data) => {
     });
 }
 
-const jsonToTable = (data) => {
-    console.log(data);
-    // Header Setup
-    thead.innerHTML = "";
-    tbody.innerHTML = "";
-    if (Array.isArray(data.Records[0])) {
-        const tr = document.createElement("tr");
-        data.Records[0].forEach((_, idx) => {
-            const th = document.createElement("th");
-            th.textContent = `Col ${idx + 1}`;
-            tr.appendChild(th);
-        });
-        thead.appendChild(tr);
-
-        // Data Setup
-        data.Records.map(row => {
-            const tr = document.createElement("tr");
-            row.map(data => {
-                const td = document.createElement("td");
-                td.textContent = data ?? "-";
-                tr.appendChild(td);
-            })
-            tbody.appendChild(tr);
-        });
-    } else {
-        // Header Setup
-        const tr = document.createElement("tr");
-        for (const key in data.Records[0]) {
-            const th = document.createElement("th");
-            th.textContent = key;
-            tr.appendChild(th);
-        }
-        thead.appendChild(tr);
-
-        // Data Setup
-        data.Records.map(row => {
-            const tr = document.createElement("tr");
-            for (const key in row) {
-                const td = document.createElement("td");
-                td.textContent = row[key] ?? "-";
-                tr.appendChild(td);
-            }
-            tbody.appendChild(tr);
-        });
-    }
-}
-
 const querySelection = (apiInputs) => {
     var query = {};
     switch (apiInputs.apiType) {
@@ -247,8 +218,8 @@ const querySelection = (apiInputs) => {
         case "getannouncementsforcompanies":
             query = { response: apiInputs.resType, from: formateDateTime(apiInputs.fromDate), to: formateDateTime(apiInputs.toDate), symbol: apiType.search, top: apiInputs.top }
             break;
-        case "yearly-return":
-            row2.style.display = "flex";
+        case "getAllResultsByCompany":
+            query = { response: apiInputs.resType, symbol: apiInputs.search, nature: apiInputs.nature, period: apiInputs.period, type: apiInputs.type }
             break;
         default:
             break;
@@ -259,7 +230,7 @@ const querySelection = (apiInputs) => {
 const fetchApiData = async () => {
     try {
         const data = await callApi({ apiInputs, query: querySelection(apiInputs) });
-        apiInputs.resType === 'csv' ? csvToTable(data) : jsonToTable(data);
+        csvToTable(data);
     } catch (error) {
         console.log("API error: ", error);
     }
