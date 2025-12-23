@@ -1,8 +1,7 @@
 // fetch all divs
 const row2 = document.querySelector(".row-2");
 const row3 = document.querySelector(".row-3");
-const row5 = document.querySelector(".row-5");
-const row6 = document.querySelector(".row-6");
+const divtoprec = document.querySelector(".div-top-rec");
 
 // fetch all controls
 const username = document.getElementById("username");
@@ -14,8 +13,9 @@ const search = document.getElementById("search");
 const fromDate = document.getElementById("fromDate");
 const toDate = document.getElementById("toDate");
 const singleDate = document.getElementById("date");
-const loginResponse = document.getElementById("login-response");
+const topRec = document.getElementById("top");
 
+const loginResponse = document.getElementById("login-response");
 const apiResponseBox = document.querySelector(".api-response");
 const dataTable = document.querySelector(".data-table");
 const thead = dataTable.querySelector("thead");
@@ -30,7 +30,9 @@ var access_token = "";
 var authInputs = {};
 var apiInputs = {};
 
-[row2, row3, row5, row6].forEach(r => r.style.display = "none");
+const BASE_URL = "https://corporate.truedata.in";
+
+[row2, row3, divtoprec].forEach(r => r.style.display = "none");
 
 const clearAll = () => {
     access_token = "";
@@ -44,21 +46,27 @@ const clearAll = () => {
 }
 clearAll();
 
+const clearFiledsValue = () => {
+    search.value = "";
+    fromDate.value = toDate.value = "";
+    singleDate.value = topRec.value = "";
+}
+
 // apiType change then hide/show of divs
 apiType.addEventListener("change", function () {
     // Hide everything first and if needed disply flex
-    [row2, row3, row5, row6].forEach(r => r.style.display = "none");
+    [row2, row3, divtoprec].forEach(r => r.style.display = "none");
+    clearFiledsValue();
 
     switch (apiType.value) {
-        case "announcement-list":
-            row2.style.display = row5.style.display = "flex";
+        case "announcements":
+            row2.style.display = "flex";
             break;
-        case "rslt-list-date":
-        case "nav-behavcopy":
+        case "getResultList":
             row3.style.display = "flex";
             break;
-        case "announcement-for-companies":
-            row2.style.display = row5.style.display = row6.style.display = "flex";
+        case "getannouncementsforcompanies":
+            row2.style.display = divtoprec.style.display = "flex";
             break;
         case "yearly-return":
             row2.style.display = "flex";
@@ -85,9 +93,21 @@ const fetchApiInputs = () => {
         search: search.value,
         fromDate: fromDate.value,
         toDate: toDate.value,
-        date: singleDate.value
+        date: singleDate.value,
+        top: topRec.value,
     };
 };
+
+const formateDateTime = (date) => {
+    // if (!date) return alert("Invalid date format...");
+    const d = new Date(date);
+
+    const yy = String(d.getFullYear()).slice(2);
+    const MM = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+
+    return `${yy}${MM}${dd} 00:00:00`;
+}
 
 const login = async () => {
     const authdata = new URLSearchParams(authInputs).toString();
@@ -111,70 +131,139 @@ const login = async () => {
     btnFetch.style.opacity = 1;
 }
 
+const callApi = async ({ apiInputs, query = {} }) => {
+    const params = new URLSearchParams(query).toString();
+    const api = `${BASE_URL}/${apiInputs.apiType}?${params}`;
+    const res = await fetch(api,
+        {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${access_token}`,
+                "Accept": apiInputs.resType === "csv"
+                    ? "text/csv"
+                    : "application/json"
+            }
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error(`HTTP Error: ${res.status}`);
+    }
+
+    return apiInputs.resType === "csv"
+        ? await res.text()
+        : await res.json();
+}
+
+const csvToTable = (data) => {
+    console.log(data);
+
+    const lines = data.split('\n');
+    if (lines.length === 0) return;
+
+    // Header Setup 
+    thead.innerHTML = "";
+    const headers = lines[0].split(',');
+    const tr = document.createElement("tr");
+    headers.map(key => {
+        const th = document.createElement("th");
+        th.textContent = key;
+        tr.appendChild(th);
+    });
+    thead.appendChild(tr);
+
+    // Data Setup
+    tbody.innerHTML = "";
+    lines.slice(1).forEach(line => {
+        const values = line.split(",");
+        const tr = document.createElement("tr");
+        headers.forEach((_, idx) => {
+            const td = document.createElement("td");
+            td.textContent = values[idx]?.trim() || "-"; tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+}
+
+const jsonToTable = (data) => {
+    console.log(data);
+    // Header Setup
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+    if (Array.isArray(data.Records[0])) {
+        const tr = document.createElement("tr");
+        data.Records[0].forEach((_, idx) => {
+            const th = document.createElement("th");
+            th.textContent = `Col ${idx + 1}`;
+            tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+
+        // Data Setup
+        data.Records.map(row => {
+            const tr = document.createElement("tr");
+            row.map(data => {
+                const td = document.createElement("td");
+                td.textContent = data ?? "-";
+                tr.appendChild(td);
+            })
+            tbody.appendChild(tr);
+        });
+    } else {
+        // Header Setup
+        const tr = document.createElement("tr");
+        for (const key in data.Records[0]) {
+            const th = document.createElement("th");
+            th.textContent = key;
+            tr.appendChild(th);
+        }
+        thead.appendChild(tr);
+
+        // Data Setup
+        data.Records.map(row => {
+            const tr = document.createElement("tr");
+            for (const key in row) {
+                const td = document.createElement("td");
+                td.textContent = row[key] ?? "-";
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        });
+    }
+}
+
+const querySelection = (apiInputs) => {
+    var query = {};
+    switch (apiInputs.apiType) {
+        case "getdescriptors":
+            query = { response: apiInputs.resType }
+            break;
+        case "announcements":
+            query = { response: apiInputs.resType, from: apiInputs.fromDate, to: apiInputs.toDate, symbol: apiInputs.search }
+            break;
+        case "getResultList":
+            query = { response: apiInputs.resType, date: apiInputs.date }
+            break;
+        case "getannouncementsforcompanies":
+            query = { response: apiInputs.resType, from: formateDateTime(apiInputs.fromDate), to: formateDateTime(apiInputs.toDate), symbol: apiType.search, top: apiInputs.top }
+            break;
+        case "yearly-return":
+            row2.style.display = "flex";
+            break;
+        default:
+            break;
+    }
+    return query;
+}
+
 const fetchApiData = async () => {
     try {
-        const res = await fetch(
-            `https://corporate.truedata.in/${apiInputs.apiType}?response=${apiInputs.resType}`,
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${access_token}`,
-                    "Accept": apiInputs.resType === "csv"
-                        ? "text/csv"
-                        : "application/json"
-                }
-            }
-        );
-
-        if (!res.ok) {
-            throw new Error(`HTTP Error: ${res.status}`);
-        }
-
-        if (apiInputs.resType === "csv") {
-            const csvText = await res.text();
-            const lines = csvText.split('\n');
-            if (lines.length === 0) return; thead.innerHTML = "";
-
-            // Header Setup 
-            const headers = lines[0].split(',');
-            const tr = document.createElement("tr");
-            headers.map(key => {
-                const th = document.createElement("th");
-                th.textContent = key; tr.appendChild(th);
-            });
-            thead.appendChild(tr);
-
-            // Data Setup 
-            lines.slice(1).forEach(line => {
-                const values = line.split(",");
-                const tr = document.createElement("tr"); headers.forEach((_, idx) => {
-                    const td = document.createElement("td");
-                    td.textContent = values[idx]?.trim() || "-"; tr.appendChild(td);
-                });
-                tbody.appendChild(tr);
-            });
-        } else {
-            const jsonData = await res.json();
-            thead.innerHTML = `<tr>
-                            <th>Id</th>
-                            <th>Descriptors</th>
-                            <th>Categories</th>
-                        <tr>`;
-            jsonData.Records.map(row => {
-                const tr = document.createElement("tr");
-                row.map(data => {
-                    const td = document.createElement("td");
-                    td.textContent = data ?? "-";
-                    tr.appendChild(td);
-                })
-                tbody.appendChild(tr);
-            });
-        }
+        const data = await callApi({ apiInputs, query: querySelection(apiInputs) });
+        apiInputs.resType === 'csv' ? csvToTable(data) : jsonToTable(data);
     } catch (error) {
-        console.error("API Error:", error.message);
+        console.log("API error: ", error);
     }
 };
-
 
 btnLogin.addEventListener('click', () => {
     fetchAuthInputs();

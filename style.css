@@ -12,16 +12,30 @@ body {
 
 /* Container */
 .container {
-    max-width: 800px;
+    max-width: 100%;
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+.section-auth-fetch {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+}
+
 /* All Sections Container */
 .section-auth,
-.section-fetch,
+.section-fetch {
+    border: 1px solid #ddd;
+    padding: 16px;
+    width: 100%;
+}
+
 .section-response {
     background: #fff;
     border: 1px solid #ddd;
@@ -49,16 +63,8 @@ body {
 .fetch-form-control {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    /* width: 50%; */
     gap: 4px;
-}
-
-/* date controls in row */
-.row-5,
-.row-6 {
-    display: flex;
-    flex-direction: row;
-    gap: 14px;
 }
 
 /* all input controls  */
@@ -111,7 +117,7 @@ body {
 /* Row 2 for both search and date */
 .row-2 {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 16px;
 }
 

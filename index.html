@@ -11,89 +11,88 @@
 
 <body>
     <div class="container">
-        <div class="section-auth">
-            <div class="auth-title">
-                Generate Token
-            </div>
-            <div class="auth-cradentials">
-                <div class="form-control">
-                    <label for="username">User Id:</label>
-                    <input type="text" value="td134" name="username" id="username" class="input-control">
+        <div class="section-auth-fetch">
+            <div class="section-auth">
+                <div class="auth-title">
+                    Generate Token
                 </div>
-                <div class="form-control">
-                    <label for="password">Password:</label>
-                    <input type="password" value="dhrumil@134" name="password" id="password" class="input-control">
-                </div>
-                <div class="form-control">
-                    <label for="grantType">Grant Type:</label>
-                    <input type="text" value="password" name="grantType" id="grantType" class="input-control" disabled>
-                </div>
-                <div class="form-btn-control">
-                    <button type="button" name="btn-login" id="btn-login" class="btn-control">Login</button>
-                    <button type="button" name="btn-logout" id="btn-logout" class="btn-control">Logout</button>
-                </div>
-            </div>
-            <div class="form-control">
-                <label for="login-response">Login Response:</label>
-                <input type="text" name="login-response" id="login-response" class="input-control">
-            </div>
-        </div>
-        <div class="section-fetch">
-            <div class="fetch-title">
-                Fetch Mutual Fund Data
-            </div>
-            <div class="fetch-controls">
-                <div class="row-1">
-                    <div class="fetch-form-control">
-                        <label for="apiType">Select API Type:</label>
-                        <select name="apiType" id="apiType" class="input-control">
-                            <option value="getdescriptors">Descriptors</option>
-                            <option value="announcement-list">Announcement List</option>
-                            <option value="rslt-list-date">Result List ByDate</option>
-                            <option value="announcement-for-companies">Announcements For Companies</option>
-                            <option value="nav-history">NAV History</option>
-                            <option value="yearly-return">Yearly Return By Scheme</option>
-                            <option value="nav-behavcopy">Daily NAV Bhavcopy</option>
-                        </select>
-                    </div>
-                    <div class="fetch-form-control">
-                        <label for="resType">Select Response Type:</label>
-                        <select name="resType" id="resType" class="input-control">
-                            <option value="csv">CSV</option>
-                            <option value="json">JSON</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row-2">
+                <div class="auth-cradentials">
                     <div class="form-control">
-                        <label for="search">Search Symbol:</label>
-                        <input type="text" name="search" id="search" class="input-control">
+                        <label for="username">User Id:</label>
+                        <input type="text" value="td134" name="username" id="username" class="input-control">
+                    </div>
+                    <div class="form-control">
+                        <label for="password">Password:</label>
+                        <input type="password" value="dhrumil@134" name="password" id="password" class="input-control">
+                    </div>
+                    <div class="form-control">
+                        <label for="grantType">Grant Type:</label>
+                        <input type="text" value="password" name="grantType" id="grantType" class="input-control"
+                            disabled>
+                    </div>
+                    <div class="form-btn-control">
+                        <button type="button" name="btn-login" id="btn-login" class="btn-control">Login</button>
+                        <button type="button" name="btn-logout" id="btn-logout" class="btn-control">Logout</button>
                     </div>
                 </div>
-                <div class="row-3">
-                    <div class="fetch-form-control">
-                        <label for="date">Date:</label>
-                        <input type="date" name="date" id="date" class="input-control">
-                    </div>
+                <div class="form-control">
+                    <label for="login-response">Login Response:</label>
+                    <input type="text" name="login-response" id="login-response" class="input-control">
                 </div>
-                <div class="row-5">
-                    <div class="fetch-form-control">
-                        <label for="fromDate">From Date:</label>
-                        <input type="date" name="fromDate" id="fromDate" class="input-control">
-                    </div>
-                    <div class="fetch-form-control">
-                        <label for="toDate">To Date:</label>
-                        <input type="date" name="toDate" id="toDate" class="input-control">
-                    </div>
+            </div>
+            <div class="section-fetch">
+                <div class="fetch-title">
+                    Fetch Corporate Data
                 </div>
-                <div class="row-6">
-                    <div class="fetch-form-control">
-                        <label for="top">Top:</label>
-                        <input type="number" name="top" id="top" class="input-control" min="1">
+                <div class="fetch-controls">
+                    <div class="row-1">
+                        <div class="fetch-form-control">
+                            <label for="apiType">Select API Type:</label>
+                            <select name="apiType" id="apiType" class="input-control">
+                                <option value="getdescriptors">Descriptors</option>
+                                <option value="announcements">Announcement List</option>
+                                <option value="getResultList">Result List ByDate</option>
+                                <option value="getannouncementsforcompanies">Announcements For Companies</option>
+                                <option value="nav-history">NAV History</option>
+                                <option value="yearly-return">Yearly Return By Scheme</option>
+                                <option value="nav-behavcopy">Daily NAV Bhavcopy</option>
+                            </select>
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="resType">Select Response Type:</label>
+                            <select name="resType" id="resType" class="input-control">
+                                <option value="csv">CSV</option>
+                                <option value="json">JSON</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row-4">
-                    <button type="button" name="btn-fetch" id="btn-fetch" class="btn-control">Fetch Data</button>
+                    <div class="row-2">
+                        <div class="fetch-form-control">
+                            <label for="search">Search Symbol:</label>
+                            <input type="text" name="search" id="search" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="fromDate">From Date:</label>
+                            <input type="date" name="fromDate" id="fromDate" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="toDate">To Date:</label>
+                            <input type="date" name="toDate" id="toDate" class="input-control">
+                        </div>
+                        <div class="fetch-form-control div-top-rec">
+                            <label for="top">Top:</label>
+                            <input type="number" name="top" id="top" class="input-control" min="1">
+                        </div>
+                    </div>
+                    <div class="row-3">
+                        <div class="fetch-form-control">
+                            <label for="date">Date:</label>
+                            <input type="date" name="date" id="date" class="input-control">
+                        </div>
+                    </div>
+                    <div class="row-4">
+                        <button type="button" name="btn-fetch" id="btn-fetch" class="btn-control">Fetch Data</button>
+                    </div>
                 </div>
             </div>
         </div>
