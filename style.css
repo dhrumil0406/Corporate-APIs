@@ -54,7 +54,8 @@ body {
 }
 
 /* date controls in row */
-.row-5, .row-6 {
+.row-5,
+.row-6 {
     display: flex;
     flex-direction: row;
     gap: 14px;
@@ -86,6 +87,7 @@ body {
 /* Section 1 */
 .auth-cradentials {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     align-items: flex-end;
     margin-bottom: 12px;
@@ -116,20 +118,42 @@ body {
 /* Response data container */
 .api-response {
     min-height: 250px;
+    max-height: 300px;
     border: 1px solid #ccc;
     padding: 12px;
     overflow: auto;
     background: #fafafa;
-    /* white-space: pre-wrap; */
-    overflow-x: auto;
+    overflow: auto;
 }
 
-table{
-    width: 100%;
+table {
+    border-collapse: collapse;
+    min-width: 100%;
     border: 1px solid black;
+    font-size: 14px;
 }
 
-th, td{
-    border: 1px solid gray;
-    padding: 8px 20px;
+.data-table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.data-table th,
+.data-table td {
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    text-align: left;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+
+.data-table tbody tr:hover {
+    background-color: #ecf3f8;
+    cursor: pointer;
 }
