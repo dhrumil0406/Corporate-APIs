@@ -35,7 +35,7 @@
                         <button type="button" name="btn-logout" id="btn-logout" class="btn-control">Logout</button>
                     </div>
                 </div>
-                <div class="form-control">
+                <div class="btn-form-control">
                     <label for="login-response">Login Response: <span id="login-response"></span></label>
                     <!-- <input type="text" name="login-response" id="login-response" class="input-control"> -->
                 </div>
@@ -50,10 +50,26 @@
                             <label for="apiType">Select API Type:</label>
                             <select name="apiType" id="apiType" class="input-control">
                                 <option value="getdescriptors">Descriptors</option>
-                                <option value="announcements">Announcement List</option>
+                                <option value="announcements">Announcements List</option>
                                 <option value="getResultList">Result List ByDate</option>
                                 <option value="getannouncementsforcompanies">Announcements For Companies</option>
-                                <option value="getAllResultsByCompany">All Result By Company</option>
+                                <option value="getAllResultsByCompany">All Result ByCompany</option>
+                                <option value="getSHPListByDate">SHP List ByDate</option>
+                                <option value="getSHPListByCompany">SHP List ByCompany</option>
+                                <option value="getShpMemberTypes">SHP MemberTypes</option>
+                                <option value="getfiidiidata">FIIDII Data</option>
+                                <option value="getannouncementsforcompaniesrange">Announcements For Companies Range
+                                </option>
+                                <option value="getresultcalendar">Get Result Calendar</option>
+                                <option value="getSymbolClassification">Get Symbol Classification</option>
+                                <option value="getPeerCompanies">Get Peer Companies</option>
+                                <option value="getMarketCap">Get Market Cap</option>
+                                <option value="getchartdata">Get Chart Data</option>
+                                <option value="getratiosForsymbol">Ratios For Symbol</option>
+                                <option value="getNewsForDateRange">News For Date Range</option>
+                                <option value="getSymbolClassificationBulk">Symbol Classification Bulk</option>
+                                <option value="getChartDataWithPE">Get Chart data With PE</option>
+                                <option value="getMarketCapHistory">Market Cap History</option>
                             </select>
                         </div>
                     </div>
@@ -62,25 +78,27 @@
                             <label for="search">Search Symbol:</label>
                             <input type="text" name="search" id="search" class="input-control">
                         </div>
-                        <div class="fetch-form-control div-from-date">
+                        <div class="fetch-form-control">
                             <label for="fromDate">From Date:</label>
                             <input type="date" name="fromDate" id="fromDate" class="input-control">
                         </div>
-                        <div class="fetch-form-control div-to-date">
+                        <div class="fetch-form-control">
                             <label for="toDate">To Date:</label>
                             <input type="date" name="toDate" id="toDate" class="input-control">
                         </div>
-                        <div class="fetch-form-control div-top-rec">
+                        <div class="fetch-form-control">
                             <label for="top">Top:</label>
                             <input type="number" name="top" id="top" class="input-control" min="1">
                         </div>
                         <div class="fetch-form-control">
                             <label for="nature">Nature:</label>
-                            <input type="text" name="nature" id="nature" class="input-control" placeholder="consolidated/standalone">
+                            <input type="text" name="nature" id="nature" class="input-control"
+                                placeholder="consolidated/standalone">
                         </div>
                         <div class="fetch-form-control">
                             <label for="period">Period:</label>
-                            <input type="text" name="period" id="period" class="input-control" placeholder="quarterly/yearly">
+                            <input type="text" name="period" id="period" class="input-control"
+                                placeholder="quarterly/yearly">
                         </div>
                         <div class="fetch-form-control">
                             <label for="type">Type:</label>
@@ -89,6 +107,26 @@
                         <div class="fetch-form-control">
                             <label for="date">Date:</label>
                             <input type="date" name="date" id="date" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="id">ID:</label>
+                            <input type="number" name="id" id="id" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="segment">Segment:</label>
+                            <input type="text" name="segment" id="segment" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="fromDateTime">From Date:</label>
+                            <input type="datetime-local" name="fromDateTime" id="fromDateTime" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="toDateTime">To Date:</label>
+                            <input type="datetime-local" name="toDateTime" id="toDateTime" class="input-control">
+                        </div>
+                        <div class="fetch-form-control">
+                            <label for="duringMarket">DuringMarket: <input type="checkbox" name="duringMarket"
+                                    id="duringMarket" class="input-control"></label>
                         </div>
                     </div>
                     <div class="row-4">

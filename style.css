@@ -27,7 +27,7 @@ body {
     border-radius: 6px;
     display: flex;
     flex-direction: column;
-    width: 25vw;
+    width: 23vw;
 }
 
 /* All Sections Container */
@@ -39,7 +39,8 @@ body {
 }
 
 .section-response {
-    width: 73vw;
+    min-width: 74vw;
+    max-width: 74vw;
     background: #fff;
     border: 1px solid #ddd;
     padding: 16px;
@@ -60,6 +61,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    width: 45%;
 }
 
 /* date and select controls */
@@ -72,20 +74,19 @@ body {
 
 /* all input controls  */
 .input-control {
-    padding: 8px;
+    padding: 6px 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 /* all button controls */
 .btn-control {
-    padding: 8px 16px;
     background: #00c03a;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    padding: 9px 10px;
+    padding: 6px 10px;
     font-weight: bold;
 }
 
@@ -97,7 +98,7 @@ body {
 .auth-cradentials {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 10px;
     align-items: flex-end;
     margin-bottom: 12px;
 }
@@ -106,14 +107,6 @@ body {
 .fetch-controls {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-}
-
-/* Row 1 */
-.row-1,
-.row-3,
-.row-4 {
-    display: flex;
     gap: 16px;
 }
 
@@ -142,6 +135,7 @@ table {
 }
 
 .data-table thead th {
+    font-size: 16px;
     position: sticky;
     top: 0;
     background: #fff;
@@ -154,15 +148,15 @@ table {
 .data-table th,
 .data-table td {
     border: 1px solid #ccc;
-    padding: 6px 12px;
+    padding: 8px 12px;
     text-align: left;
 }
 
 .data-table tbody tr:nth-child(even) {
-    background-color: #f6f6f6;
+    background-color: #fff;
 }
 
 .data-table tbody tr:hover {
-    background-color: #ecf3f8;
+    background-color: #eeefef;
     cursor: pointer;
 }
